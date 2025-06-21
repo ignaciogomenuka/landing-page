@@ -44,47 +44,54 @@
   <!-- Fetch data from Google Sheet via opensheet -->
   <script>
     async function fetchData() {
-      const res = await fetch("https://opensheet.elk.sh/2PACX-1vR265U_0eK5sKkjPU26W2dgzRWT9noaFuz_LBN-vUyYIENXIlHK8iCNhUP7sbi5iRYN2IT-uBJvi3IE/Sheet1");
-      const data = await res.json();
-      const container = document.getElementById("cool-stuff");
-      const loading = document.getElementById("loading");
+      try {
+        const res = await fetch("https://opensheet.elk.sh/2PACX-1vR265U_0eK5sKkjPU26W2dgzRWT9noaFuz_LBN-vUyYIENXIlHK8iCNhUP7sbi5iRYN2IT-uBJvi3IE/Sheet1");
+        const data = await res.json();
+        const container = document.getElementById("cool-stuff");
+        const loading = document.getElementById("loading");
 
-      if (!data || data.length === 0) {
-        loading.textContent = "No content available yet.";
-        return;
-      }
+        if (!data || data.length === 0) {
+          loading.textContent = "No content available yet.";
+          return;
+        }
 
-      loading.style.display = "none";
+        loading.style.display = "none";
 
-      data.forEach((item, index) => {
-        const url = item.URL || item.Link || item["Video or Tweet"] || Object.values(item)[0];
-        if (!url) return;
+        data.forEach((item, index) => {
+          const url = item.URL || item.Link || item["Video or Tweet"] || Object.values(item)[0];
+          if (!url) return;
 
-        if (url.includes("youtube.com") || url.includes("youtu.be")) {
-          const videoID = url.includes("youtu.be")
-            ? url.split("/").pop()
-            : new URL(url).searchParams.get("v");
+          if (url.includes("youtube.com") || url.includes("youtu.be")) {
+            const videoID = url.includes("youtu.be")
+              ? url.split("/").pop()
+              : new URL(url).searchParams.get("v");
 
-          if (videoID) {
-            container.innerHTML += `
-              <div class="mb-8">
+            if (videoID) {
+              const videoHTML = document.createElement("div");
+              videoHTML.className = "mb-8";
+              videoHTML.innerHTML = `
                 <h3 class="font-medium">Video ${index + 1}</h3>
-                <iframe class="w-full h-64 mt-2 rounded" src="https://www.youtube.com/embed/${videoID}" frameborder="0" allowfullscreen></iframe>
-              </div>`;
-          }
-        } else if (url.includes("twitter.com")) {
-          container.innerHTML += `
-            <div class="mb-8">
+                <iframe class="w-full h-64 mt-2 rounded" src="https://www.youtube.com/embed/${videoID}" frameborder="0" allowfullscreen></iframe>`;
+              container.appendChild(videoHTML);
+            }
+          } else if (url.includes("twitter.com") || url.includes("x.com")) {
+            const tweetHTML = document.createElement("div");
+            tweetHTML.className = "mb-8";
+            tweetHTML.innerHTML = `
               <h3 class="font-medium">Tweet ${index + 1}</h3>
               <blockquote class="twitter-tweet">
                 <a href="${url}">${url}</a>
-              </blockquote>
-            </div>`;
-        }
-      });
+              </blockquote>`;
+            container.appendChild(tweetHTML);
+          }
+        });
 
-      if (window.twttr && window.twttr.widgets) {
-        window.twttr.widgets.load();
+        if (window.twttr && window.twttr.widgets) {
+          window.twttr.widgets.load();
+        }
+      } catch (error) {
+        document.getElementById("loading").textContent = "Failed to load content.";
+        console.error("Error fetching data:", error);
       }
     }
 
