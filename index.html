@@ -33,7 +33,7 @@
 
   <!-- Cool Stuff Section -->
   <section class="max-w-3xl mx-auto px-6 pb-12">
-    <h2 class="text-2xl font-semibold mb-6">Cool Stuff I Found</h2>
+    <h2 class="text-2xl font-semibold mb-6">Cool Stuff Resources and Watchlist</h2>
     <div id="cool-stuff"></div>
     <p id="loading" class="text-sm text-gray-500">Loading content...</p>
   </section>
@@ -93,5 +93,13 @@
 
     window.addEventListener("DOMContentLoaded", fetchData);
   </script>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<script>
+  window.addEventListener("load", () => {
+    if (window.twttr && window.twttr.widgets) {
+      setTimeout(() => window.twttr.widgets.load(), 500);
+    }
+  });
+</script>
 </body>
 </html>
