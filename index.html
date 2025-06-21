@@ -52,5 +52,44 @@
 
     
   </section>
+<script src="https://unpkg.com/tabletop@1.6.4/tabletop.js"></script>
+<script>
+  const sheetID = "1F4oYvrH89GZoSE4HI3Y_owXszwDhw1gCKjqk-KZwK8g";
+
+  function init() {
+    Tabletop.init({
+      key: sheetID,
+      callback: showData,
+      simpleSheet: true
+    });
+  }
+
+  function showData(data) {
+    const container = document.querySelector("section");
+    data.forEach(item => {
+      if (item.Type === "Video") {
+        const videoID = new URL(item.URL).searchParams.get("v");
+        container.innerHTML += `
+          <div class="mb-8">
+            <h3 class="font-medium">Video: ${item.Title}</h3>
+            <iframe class="w-full h-64 mt-2 rounded" src="https://www.youtube.com/embed/${videoID}" frameborder="0" allowfullscreen></iframe>
+          </div>`;
+      } else if (item.Type === "Tweet") {
+        container.innerHTML += `
+          <div class="mb-8">
+            <h3 class="font-medium">Tweet: ${item.Title}</h3>
+            <blockquote class="twitter-tweet">
+              <a href="${item.URL}">${item.URL}</a>
+            </blockquote>
+          </div>`;
+      }
+    });
+    if (window.twttr && window.twttr.widgets) {
+      window.twttr.widgets.load();
+    }
+  }
+
+  window.addEventListener("DOMContentLoaded", init);
+</script>
 </body>
 </html>
