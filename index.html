@@ -49,9 +49,9 @@
 
   <!-- Cool Stuff Section -->
   <section class="max-w-5xl mx-auto px-6 pb-12">
-    <h2 class="text-2xl font-semibold mb-6">Cool Stuff I Found</h2>
-    <div id="video-carousel" class="mb-12 space-y-4"></div>
-    <div id="tweet-carousel" class="scroll-container"></div>
+    <h2 class="text-2xl font-semibold mb-6">Cool Stuff Resources and Watchlist</h2>
+    <div id="tweet-carousel" class="scroll-container mb-12"></div>
+    <div id="video-carousel" class="space-y-4"></div>
     <p id="loading" class="text-sm text-gray-500 mt-4">Loading content...</p>
   </section>
 
@@ -99,7 +99,7 @@
           } else if (url.includes("twitter.com")) {
             const tweetHTML = document.createElement("div");
             tweetHTML.className = "tweet-slide rounded overflow-hidden shadow-md bg-white p-4";
-            tweetHTML.innerHTML = `<blockquote class="twitter-tweet"><a href="${url}"></a></blockquote>`;
+            tweetHTML.innerHTML = `<blockquote class="twitter-tweet"><a href="${url}" target="_blank" rel="noopener noreferrer"></a></blockquote>`;
             tweetCarousel.appendChild(tweetHTML);
           }
         });
