@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ignacio Muñoz Gomeñuka – Personal Landing Page</title>
+  <link rel="icon" type="image/png" href="https://em-content.zobj.net/source/microsoft-teams/363/globe-showing-americas_1f30e.png" />
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <style>
     .scroll-container {
@@ -44,12 +45,15 @@
       <a href="https://www.linkedin.com/in/ignaciomg/" target="_blank" aria-label="LinkedIn">
         <img src="https://cdn.jsdelivr.net/npm/simple-icons@v5/icons/linkedin.svg" alt="LinkedIn" class="w-6 h-6">
       </a>
+      <a href="https://cv-chona.vercel.app/" target="_blank" aria-label="Resume">
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v5/icons/readthedocs.svg" alt="Resume" class="w-6 h-6">
+      </a>
     </div>
   </header>
 
   <!-- Cool Stuff Section -->
   <section class="max-w-5xl mx-auto px-6 pb-12">
-    <h2 class="text-2xl font-semibold mb-6">Cool Stuff Resources and Watchlist</h2>
+    <h2 class="text-2xl font-semibold mb-6">Cool Stuff I Found</h2>
     <div id="tweet-carousel" class="scroll-container mb-12"></div>
     <div id="video-carousel" class="space-y-4"></div>
     <p id="loading" class="text-sm text-gray-500 mt-4">Loading content...</p>
@@ -84,7 +88,12 @@
 
           url = url.replace("x.com", "twitter.com");
 
-          if (url.includes("youtube.com") || url.includes("youtu.be")) {
+          if (url.includes("twitter.com")) {
+            const tweetHTML = document.createElement("div");
+            tweetHTML.className = "tweet-slide rounded overflow-hidden shadow-md bg-white p-4";
+            tweetHTML.innerHTML = `<blockquote class="twitter-tweet"><a href="${url}" target="_blank" rel="noopener noreferrer"></a></blockquote>`;
+            tweetCarousel.appendChild(tweetHTML);
+          } else if (url.includes("youtube.com") || url.includes("youtu.be")) {
             const videoID = url.includes("youtu.be")
               ? url.split("/").pop()
               : new URL(url).searchParams.get("v");
@@ -96,11 +105,6 @@
                 <iframe class="w-full h-64" src="https://www.youtube.com/embed/${videoID}" frameborder="0" allowfullscreen></iframe>`;
               videoCarousel.appendChild(videoHTML);
             }
-          } else if (url.includes("twitter.com")) {
-            const tweetHTML = document.createElement("div");
-            tweetHTML.className = "tweet-slide rounded overflow-hidden shadow-md bg-white p-4";
-            tweetHTML.innerHTML = `<blockquote class="twitter-tweet"><a href="${url}" target="_blank" rel="noopener noreferrer"></a></blockquote>`;
-            tweetCarousel.appendChild(tweetHTML);
           }
         });
 
