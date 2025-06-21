@@ -80,14 +80,13 @@
         } else if (url.includes("twitter.com") || url.includes("x.com")) {
           const tweetHTML = document.createElement("div");
           tweetHTML.className = "rounded overflow-hidden shadow-md bg-white p-4";
-          tweetHTML.innerHTML = `
-            <blockquote class="twitter-tweet"><a href="${url}">${url}</a></blockquote>`;
+          tweetHTML.innerHTML = `<blockquote class="twitter-tweet"><a href="${url}"></a></blockquote>`;
           tweetCarousel.appendChild(tweetHTML);
         }
       });
 
         if (window.twttr && window.twttr.widgets) {
-          window.twttr.widgets.load(document.getElementById("cool-stuff"));
+          window.twttr.widgets.load(document.getElementById("tweet-carousel"));
         }
       } catch (error) {
         const fallback = document.createElement("p");
