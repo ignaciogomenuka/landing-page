@@ -34,7 +34,8 @@
   <!-- Cool Stuff Section -->
   <section class="max-w-3xl mx-auto px-6 pb-12">
     <h2 class="text-2xl font-semibold mb-6">Cool Stuff I Found</h2>
-    <!-- Dynamic content loads here -->
+    <div id="cool-stuff"></div>
+    <p id="loading" class="text-sm text-gray-500">Loading content...</p>
   </section>
 
   <!-- Tweet rendering -->
@@ -45,22 +46,38 @@
     async function fetchData() {
       const res = await fetch("https://opensheet.elk.sh/1F4oYvrH89GZoSE4HI3Y_owXszwDhw1gCKjqk-KZwK8g/Sheet1");
       const data = await res.json();
-      const container = document.querySelector("section");
+      const container = document.getElementById("cool-stuff");
+      const loading = document.getElementById("loading");
 
-      data.forEach(item => {
-        if (item.Type === "Video") {
-          const videoID = new URL(item.URL).searchParams.get("v");
+      if (!data || data.length === 0) {
+        loading.textContent = "No content available yet.";
+        return;
+      }
+
+      loading.style.display = "none";
+
+      data.forEach((item, index) => {
+        const url = item.URL || item.Link || item["Video or Tweet"] || Object.values(item)[0];
+        if (!url) return;
+
+        if (url.includes("youtube.com") || url.includes("youtu.be")) {
+          const videoID = url.includes("youtu.be")
+            ? url.split("/").pop()
+            : new URL(url).searchParams.get("v");
+
+          if (videoID) {
+            container.innerHTML += `
+              <div class="mb-8">
+                <h3 class="font-medium">Video ${index + 1}</h3>
+                <iframe class="w-full h-64 mt-2 rounded" src="https://www.youtube.com/embed/${videoID}" frameborder="0" allowfullscreen></iframe>
+              </div>`;
+          }
+        } else if (url.includes("twitter.com")) {
           container.innerHTML += `
             <div class="mb-8">
-              <h3 class="font-medium">Video: ${item.Title}</h3>
-              <iframe class="w-full h-64 mt-2 rounded" src="https://www.youtube.com/embed/${videoID}" frameborder="0" allowfullscreen></iframe>
-            </div>`;
-        } else if (item.Type === "Tweet") {
-          container.innerHTML += `
-            <div class="mb-8">
-              <h3 class="font-medium">Tweet: ${item.Title}</h3>
+              <h3 class="font-medium">Tweet ${index + 1}</h3>
               <blockquote class="twitter-tweet">
-                <a href="${item.URL}">${item.URL}</a>
+                <a href="${url}">${url}</a>
               </blockquote>
             </div>`;
         }
