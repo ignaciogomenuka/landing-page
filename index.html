@@ -33,11 +33,11 @@
 
   <!-- Cool Stuff Section -->
   <section class="max-w-3xl mx-auto px-6 pb-12">
-  <h2 class="text-2xl font-semibold mb-6">Cool Stuff I Found</h2>
-  <div id="video-carousel" class="mb-12 space-y-4"></div>
-  <div id="tweet-carousel" class="space-y-4" style="min-height: 300px;"></div>
-  <p id="loading" class="text-sm text-gray-500">Loading content...</p>
-</section>
+    <h2 class="text-2xl font-semibold mb-6">Cool Stuff I Found</h2>
+    <div id="video-carousel" class="mb-12 space-y-4"></div>
+    <div id="tweet-carousel" class="space-y-4" style="min-height: 300px;"></div>
+    <p id="loading" class="text-sm text-gray-500">Loading content...</p>
+  </section>
 
   <!-- Tweet rendering -->
   <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
@@ -48,7 +48,6 @@
       try {
         const res = await fetch("https://opensheet.elk.sh/1F4oYvrH89GZoSE4HI3Y_owXszwDhw1gCKjqk-KZwK8g/Sheet1");
         const data = await res.json();
-        const container = document.getElementById("cool-stuff");
         const loading = document.getElementById("loading");
 
         if (!data || data.length === 0) {
@@ -58,41 +57,41 @@
 
         loading.style.display = "none";
 
-              const videoCarousel = document.getElementById("video-carousel");
-      const tweetCarousel = document.getElementById("tweet-carousel");
+        const videoCarousel = document.getElementById("video-carousel");
+        const tweetCarousel = document.getElementById("tweet-carousel");
 
-      data.forEach(item => {
-        const url = item.URL || item.Link || item["Video or Tweet"] || Object.values(item)[0];
-        if (!url) return;
+        data.forEach(item => {
+          const url = item.URL || item.Link || item["Video or Tweet"] || Object.values(item)[0];
+          if (!url) return;
 
-        if (url.includes("youtube.com") || url.includes("youtu.be")) {
-          const videoID = url.includes("youtu.be")
-            ? url.split("/").pop()
-            : new URL(url).searchParams.get("v");
+          if (url.includes("youtube.com") || url.includes("youtu.be")) {
+            const videoID = url.includes("youtu.be")
+              ? url.split("/").pop()
+              : new URL(url).searchParams.get("v");
 
-          if (videoID) {
-            const videoHTML = document.createElement("div");
-            videoHTML.className = "rounded overflow-hidden shadow-lg";
-            videoHTML.innerHTML = `
-              <iframe class="w-full h-64" src="https://www.youtube.com/embed/${videoID}" frameborder="0" allowfullscreen></iframe>`;
-            videoCarousel.appendChild(videoHTML);
+            if (videoID) {
+              const videoHTML = document.createElement("div");
+              videoHTML.className = "rounded overflow-hidden shadow-lg";
+              videoHTML.innerHTML = `
+                <iframe class="w-full h-64" src="https://www.youtube.com/embed/${videoID}" frameborder="0" allowfullscreen></iframe>`;
+              videoCarousel.appendChild(videoHTML);
+            }
+          } else if (url.includes("twitter.com") || url.includes("x.com")) {
+            const tweetHTML = document.createElement("div");
+            tweetHTML.className = "rounded overflow-hidden shadow-md bg-white p-4";
+            tweetHTML.innerHTML = `<blockquote class="twitter-tweet"><a href="${url}">${url}</a></blockquote>`;
+            tweetCarousel.appendChild(tweetHTML);
           }
-        } else if (url.includes("twitter.com") || url.includes("x.com")) {
-          const tweetHTML = document.createElement("div");
-          tweetHTML.className = "rounded overflow-hidden shadow-md bg-white p-4";
-          tweetHTML.innerHTML = `<blockquote class=\"twitter-tweet\"><a href=\"\${url}\">\${url}</a></blockquote>`;
-          tweetCarousel.appendChild(tweetHTML);
-        }
-      });
+        });
 
         if (window.twttr && window.twttr.widgets) {
-          window.twttr.widgets.load(document.getElementById("tweet-carousel"));
+          setTimeout(() => window.twttr.widgets.load(tweetCarousel), 500);
         }
       } catch (error) {
         const fallback = document.createElement("p");
         fallback.className = "text-sm text-red-500 mt-4";
         fallback.textContent = "There was an error loading the content. Please try again later.";
-        document.getElementById("cool-stuff").appendChild(fallback);
+        document.getElementById("tweet-carousel").appendChild(fallback);
         document.getElementById("loading").remove();
         console.error("Error fetching data:", error);
       }
@@ -100,13 +99,5 @@
 
     window.addEventListener("DOMContentLoaded", fetchData);
   </script>
-<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-<script>
-  window.addEventListener("load", () => {
-    if (window.twttr && window.twttr.widgets) {
-      setTimeout(() => window.twttr.widgets.load(), 500);
-    }
-  });
-</script>
 </body>
 </html>
