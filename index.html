@@ -70,7 +70,6 @@
               const videoHTML = document.createElement("div");
               videoHTML.className = "mb-8";
               videoHTML.innerHTML = `
-                <h3 class="font-medium">Video ${index + 1}</h3>
                 <iframe class="w-full h-64 mt-2 rounded" src="https://www.youtube.com/embed/${videoID}" frameborder="0" allowfullscreen></iframe>`;
               container.appendChild(videoHTML);
             }
@@ -78,7 +77,6 @@
             const tweetHTML = document.createElement("div");
             tweetHTML.className = "mb-8";
             tweetHTML.innerHTML = `
-              <h3 class="font-medium">Tweet ${index + 1}</h3>
               <blockquote class="twitter-tweet">
                 <a href="${url}">${url}</a>
               </blockquote>`;
