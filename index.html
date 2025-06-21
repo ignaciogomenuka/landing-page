@@ -32,49 +32,46 @@
   </header>
 
   <!-- Cool Stuff Section -->
-<section class="max-w-3xl mx-auto px-6 pb-12">
-  <h2 class="text-2xl font-semibold mb-6">Cool Stuff I Found</h2>
-  <!-- Content will be loaded from Google Sheets -->
-</section>
+  <section class="max-w-3xl mx-auto px-6 pb-12">
+    <h2 class="text-2xl font-semibold mb-6">Cool Stuff I Found</h2>
+    <!-- Dynamic content loads here -->
+  </section>
 
-<script src="https://unpkg.com/tabletop@1.6.4/tabletop.js"></script>
-<script>
-  const sheetID = "1F4oYvrH89GZoSE4HI3Y_owXszwDhw1gCKjqk-KZwK8g";
+  <!-- Tweet rendering -->
+  <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
-  function init() {
-    Tabletop.init({
-      key: sheetID,
-      callback: showData,
-      simpleSheet: true
-    });
-  }
+  <!-- Fetch data from Google Sheet via opensheet -->
+  <script>
+    async function fetchData() {
+      const res = await fetch("https://opensheet.elk.sh/1F4oYvrH89GZoSE4HI3Y_owXszwDhw1gCKjqk-KZwK8g/Sheet1");
+      const data = await res.json();
+      const container = document.querySelector("section");
 
-  function showData(data) {
-    const container = document.querySelector("section");
-    data.forEach(item => {
-      if (item.Type === "Video") {
-        const videoID = new URL(item.URL).searchParams.get("v");
-        container.innerHTML += `
-          <div class="mb-8">
-            <h3 class="font-medium">Video: ${item.Title}</h3>
-            <iframe class="w-full h-64 mt-2 rounded" src="https://www.youtube.com/embed/${videoID}" frameborder="0" allowfullscreen></iframe>
-          </div>`;
-      } else if (item.Type === "Tweet") {
-        container.innerHTML += `
-          <div class="mb-8">
-            <h3 class="font-medium">Tweet: ${item.Title}</h3>
-            <blockquote class="twitter-tweet">
-              <a href="${item.URL}">${item.URL}</a>
-            </blockquote>
-          </div>`;
+      data.forEach(item => {
+        if (item.Type === "Video") {
+          const videoID = new URL(item.URL).searchParams.get("v");
+          container.innerHTML += `
+            <div class="mb-8">
+              <h3 class="font-medium">Video: ${item.Title}</h3>
+              <iframe class="w-full h-64 mt-2 rounded" src="https://www.youtube.com/embed/${videoID}" frameborder="0" allowfullscreen></iframe>
+            </div>`;
+        } else if (item.Type === "Tweet") {
+          container.innerHTML += `
+            <div class="mb-8">
+              <h3 class="font-medium">Tweet: ${item.Title}</h3>
+              <blockquote class="twitter-tweet">
+                <a href="${item.URL}">${item.URL}</a>
+              </blockquote>
+            </div>`;
+        }
+      });
+
+      if (window.twttr && window.twttr.widgets) {
+        window.twttr.widgets.load();
       }
-    });
-    if (window.twttr && window.twttr.widgets) {
-      window.twttr.widgets.load();
     }
-  }
 
-  window.addEventListener("DOMContentLoaded", init);
-</script>
+    window.addEventListener("DOMContentLoaded", fetchData);
+  </script>
 </body>
 </html>
