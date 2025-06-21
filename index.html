@@ -33,7 +33,7 @@
 
   <!-- Cool Stuff Section -->
   <section class="max-w-3xl mx-auto px-6 pb-12">
-    <h2 class="text-2xl font-semibold mb-6">Cool Stuff Resources and Watchlist</h2>
+    <h2 class="text-2xl font-semibold mb-6">Cool Stuff I Found</h2>
     <div id="cool-stuff"></div>
     <p id="loading" class="text-sm text-gray-500">Loading content...</p>
   </section>
@@ -77,16 +77,20 @@
             const tweetHTML = document.createElement("div");
             tweetHTML.className = "mb-8";
             tweetHTML.innerHTML = `
-              <blockquote class="twitter-tweet"><a href="${url}"></a></blockquote>`;
+              <blockquote class="twitter-tweet"><a href="${url}">${url}</a></blockquote>`;
             container.appendChild(tweetHTML);
           }
         });
 
         if (window.twttr && window.twttr.widgets) {
-          window.twttr.widgets.load();
+          window.twttr.widgets.load(document.getElementById("cool-stuff"));
         }
       } catch (error) {
-        document.getElementById("loading").textContent = "Failed to load content.";
+        const fallback = document.createElement("p");
+        fallback.className = "text-sm text-red-500 mt-4";
+        fallback.textContent = "There was an error loading the content. Please try again later.";
+        document.getElementById("cool-stuff").appendChild(fallback);
+        document.getElementById("loading").remove();
         console.error("Error fetching data:", error);
       }
     }
